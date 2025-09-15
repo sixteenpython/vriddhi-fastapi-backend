@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: vriddhi-fastapi-backend
+    env: python
+    buildCommand: "pip install -r requirements-minimal.txt"
+    startCommand: "uvicorn app.minimal_main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: PYTHONPATH
+        value: /opt/render/project/src
+      - key: LOG_LEVEL
+        value: INFO
+    healthCheckPath: /health
