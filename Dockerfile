@@ -78,4 +78,4 @@ EXPOSE 8000
 #     CMD python -c "import requests; requests.get('http://localhost:8000/health')" || exit 1
 
 # Run the application
-CMD ["sh", "-c", "uvicorn app.advanced_main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD ["sh", "-c", "uvicorn app.test_main:app --host 0.0.0.0 --port ${PORT:-8000}"]
