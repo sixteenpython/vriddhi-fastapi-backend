@@ -106,15 +106,25 @@ def load_stock_data():
     """Load stock database"""
     global STOCK_DATA
     try:
-        # Try to load from data directory
-        data_path = "data/grand_table_expanded.csv"
-        if not os.path.exists(data_path):
-            # Fallback to current directory
-            data_path = "grand_table_expanded.csv"
+        # Try multiple possible paths
+        possible_paths = [
+            "grand_table_expanded.csv",
+            "./grand_table_expanded.csv",
+            "data/grand_table_expanded.csv",
+            "/app/grand_table_expanded.csv",
+            os.path.join(os.path.dirname(__file__), "..", "grand_table_expanded.csv")
+        ]
 
-        STOCK_DATA = pd.read_csv(data_path)
-        logger.info(f"✅ Loaded {len(STOCK_DATA)} stocks from database")
-        return True
+        for data_path in possible_paths:
+            if os.path.exists(data_path):
+                STOCK_DATA = pd.read_csv(data_path)
+                logger.info(f"✅ Loaded {len(STOCK_DATA)} stocks from {data_path}")
+                return True
+
+        # If no file found, log available files in current directory
+        current_files = os.listdir(".")
+        logger.error(f"❌ Stock database not found. Available files: {current_files}")
+        return False
     except Exception as e:
         logger.error(f"❌ Error loading stock data: {e}")
         return False
