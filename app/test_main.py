@@ -41,21 +41,29 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Hardcoded stock data for testing
-STOCK_DATA_DICT = [
-    {"Overall_Rank": 1, "Ticker": "HDFCLIFE", "Sector": "Financials", "Current_Price": 788.75, "PE_Ratio": 14.5, "PB_Ratio": 4.2, "Avg_Historical_CAGR": 69.74, "Forecast_12M": 53.41, "Forecast_24M": 63.12, "Forecast_36M": 71.18, "Forecast_48M": 77.67, "Forecast_60M": 83.33},
-    {"Overall_Rank": 2, "Ticker": "APOLLOHOSP", "Sector": "Healthcare", "Current_Price": 7922.5, "PE_Ratio": 58, "PB_Ratio": 6.2, "Avg_Historical_CAGR": 54.73, "Forecast_12M": 51.82, "Forecast_24M": 53.93, "Forecast_36M": 55.12, "Forecast_48M": 56.06, "Forecast_60M": 56.7},
-    {"Overall_Rank": 3, "Ticker": "HEROMOTOCO", "Sector": "Automobile", "Current_Price": 4997.9, "PE_Ratio": 22, "PB_Ratio": 3.8, "Avg_Historical_CAGR": 50.15, "Forecast_12M": 51.09, "Forecast_24M": 50.3, "Forecast_36M": 49.97, "Forecast_48M": 49.83, "Forecast_60M": 49.57},
-    {"Overall_Rank": 4, "Ticker": "TATACONSUM", "Sector": "Consumer", "Current_Price": 1084.1, "PE_Ratio": 48, "PB_Ratio": 18, "Avg_Historical_CAGR": 44.18, "Forecast_12M": 37.41, "Forecast_24M": 43.51, "Forecast_36M": 45.73, "Forecast_48M": 46.65, "Forecast_60M": 47.61},
-    {"Overall_Rank": 5, "Ticker": "SBILIFE", "Sector": "Financials", "Current_Price": 1859, "PE_Ratio": 15, "PB_Ratio": 4.8, "Avg_Historical_CAGR": 43.98, "Forecast_12M": 31.48, "Forecast_24M": 37.79, "Forecast_36M": 44.58, "Forecast_48M": 50.31, "Forecast_60M": 55.74},
-    {"Overall_Rank": 6, "Ticker": "MARUTI", "Sector": "Automobile", "Current_Price": 14349, "PE_Ratio": 28, "PB_Ratio": 4.7, "Avg_Historical_CAGR": 40.16, "Forecast_12M": 43.28, "Forecast_24M": 40.63, "Forecast_36M": 39.52, "Forecast_48M": 38.89, "Forecast_60M": 38.48},
-    {"Overall_Rank": 7, "Ticker": "HINDALCO", "Sector": "Energy", "Current_Price": 704.2, "PE_Ratio": 15, "PB_Ratio": 2.2, "Avg_Historical_CAGR": 38.82, "Forecast_12M": 37.59, "Forecast_24M": 38.42, "Forecast_36M": 38.9, "Forecast_48M": 39.48, "Forecast_60M": 39.71},
-    {"Overall_Rank": 8, "Ticker": "BAJAJ-AUTO", "Sector": "Automobile", "Current_Price": 8679.5, "PE_Ratio": 28.48, "PB_Ratio": 6.91, "Avg_Historical_CAGR": 37.94, "Forecast_12M": 35.7, "Forecast_24M": 37.69, "Forecast_36M": 38.35, "Forecast_48M": 38.82, "Forecast_60M": 39.15},
-    {"Overall_Rank": 9, "Ticker": "BEL", "Sector": "Infrastructure", "Current_Price": 374.85, "PE_Ratio": 50.12, "PB_Ratio": 13.68, "Avg_Historical_CAGR": 35.79, "Forecast_12M": 35.98, "Forecast_24M": 35.57, "Forecast_36M": 35.26, "Forecast_48M": 36.05, "Forecast_60M": 36.09},
-    {"Overall_Rank": 10, "Ticker": "RELIANCE", "Sector": "Energy", "Current_Price": 3008.45, "PE_Ratio": 25.5, "PB_Ratio": 2.8, "Avg_Historical_CAGR": 23.28, "Forecast_12M": 26.65, "Forecast_24M": 22.5, "Forecast_36M": 22.33, "Forecast_48M": 22.38, "Forecast_60M": 22.86},
-    {"Overall_Rank": 11, "Ticker": "TCS", "Sector": "IT", "Current_Price": 4396.45, "PE_Ratio": 29.8, "PB_Ratio": 5.8, "Avg_Historical_CAGR": 18.82, "Forecast_12M": 12.85, "Forecast_24M": 15.5, "Forecast_36M": 18.49, "Forecast_48M": 21.73, "Forecast_60M": 25.56},
-    {"Overall_Rank": 12, "Ticker": "INFY", "Sector": "IT", "Current_Price": 1925.5, "PE_Ratio": 27.5, "PB_Ratio": 7.2, "Avg_Historical_CAGR": 17.25, "Forecast_12M": 11.85, "Forecast_24M": 14.18, "Forecast_36M": 16.69, "Forecast_48M": 19.81, "Forecast_60M": 23.75}
-]
+# CSV file path for stock data
+CSV_FILE_PATH = "grand_table_expanded.csv"
+
+def load_stock_data():
+    """Load stock data from CSV file (same as Streamlit version)"""
+    try:
+        import os
+        csv_path = CSV_FILE_PATH
+        if not os.path.exists(csv_path):
+            # Try relative path from app directory
+            csv_path = os.path.join("..", CSV_FILE_PATH)
+
+        df = pd.read_csv(csv_path)
+        print(f"✅ Loaded {len(df)} stocks from CSV: {csv_path}")
+        return df
+    except Exception as e:
+        print(f"❌ Error loading CSV: {e}")
+        # Fallback to minimal dataset
+        fallback_data = [
+            {"Overall_Rank": 1, "Ticker": "HDFCLIFE", "Sector": "Financials", "Current_Price": 788.75, "PE_Ratio": 14.5, "PB_Ratio": 4.2, "Avg_Historical_CAGR": 69.74, "Forecast_12M": 53.41, "Forecast_24M": 63.12, "Forecast_36M": 71.18, "Forecast_48M": 77.67, "Forecast_60M": 83.33},
+            {"Overall_Rank": 2, "Ticker": "APOLLOHOSP", "Sector": "Healthcare", "Current_Price": 7922.5, "PE_Ratio": 58, "PB_Ratio": 6.2, "Avg_Historical_CAGR": 54.73, "Forecast_12M": 51.82, "Forecast_24M": 53.93, "Forecast_36M": 55.12, "Forecast_48M": 56.06, "Forecast_60M": 56.7}
+        ]
+        return pd.DataFrame(fallback_data)
 
 STOCK_DATA = None
 FORECAST_MAP = {
@@ -109,12 +117,12 @@ class InvestmentResponse(BaseModel):
     projections: Dict[str, List[float]]
     whole_share_analysis: Optional[Dict[str, Any]] = None
 
-def load_stock_data():
-    """Load hardcoded stock data"""
+def initialize_stock_data():
+    """Load stock data from CSV (same as Streamlit version)"""
     global STOCK_DATA
     try:
-        STOCK_DATA = pd.DataFrame(STOCK_DATA_DICT)
-        logger.info(f"✅ Loaded {len(STOCK_DATA)} stocks from hardcoded data")
+        STOCK_DATA = load_stock_data()
+        logger.info(f"✅ Loaded {len(STOCK_DATA)} stocks from CSV data")
         return True
     except Exception as e:
         logger.error(f"❌ Error loading stock data: {e}")
@@ -288,7 +296,7 @@ def compute_projections(optimized_df: pd.DataFrame, monthly_investment: float,
 async def startup_event():
     """Load stock data on startup"""
     logger.info("🚀 Starting Vriddhi Alpha Finder Test API...")
-    if load_stock_data():
+    if initialize_stock_data():
         logger.info("✅ Stock database loaded successfully")
     else:
         logger.error("❌ Failed to load stock database")
