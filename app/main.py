@@ -43,13 +43,13 @@ async def lifespan(app: FastAPI):
     logger.info(f"Environment: {settings.ENVIRONMENT}")
     logger.info(f"Database URL: {settings.DATABASE_URL}")
 
-    # Create database tables
+    # Create database tables (with error handling)
     try:
         await create_tables()
         logger.info("Database tables created/verified successfully")
     except Exception as e:
-        logger.error(f"Failed to create database tables: {e}")
-        raise
+        logger.warning(f"Database table creation failed (will continue): {e}")
+        # Don't raise - let the app start without database for now
 
     yield
 

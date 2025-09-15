@@ -13,9 +13,7 @@ restartPolicyMaxRetries = 3
 ENVIRONMENT = "production"
 PYTHONPATH = "/app"
 LOG_LEVEL = "INFO"
-
-# Database will be automatically injected by Railway
-# DATABASE_URL = "${{Postgres.DATABASE_URL}}"
+DATABASE_URL = "${{Postgres.DATABASE_URL}}"
 
 # CORS settings for production
 ALLOWED_ORIGINS = "https://your-frontend-domain.com,https://vriddhi-app.railway.app"
