@@ -1,0 +1,71 @@
+# Vriddhi FastAPI Backend Dependencies
+# Production-ready requirements with version pinning
+
+# Core FastAPI framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# Database
+sqlalchemy==2.0.23
+asyncpg==0.29.0
+alembic==1.13.1
+
+# Data processing and scientific computing (Core Vriddhi algorithms)
+pandas==2.1.4
+numpy==1.26.2
+scipy==1.11.4
+
+# HTTP client for health checks and external APIs
+httpx==0.25.2
+requests==2.31.0
+
+# Logging and monitoring
+structlog==23.2.0
+
+# Security and validation
+python-multipart==0.0.6
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+
+# Environment and configuration
+python-dotenv==1.0.0
+
+# System monitoring (for health checks)
+psutil==5.9.6
+
+# JSON handling
+orjson==3.9.10
+
+# Date and time utilities
+python-dateutil==2.8.2
+
+# Optional: Redis for caching (can be removed if not needed)
+redis==5.0.1
+
+# Optional: Prometheus metrics
+prometheus-client==0.19.0
+
+# Development and testing dependencies
+pytest==7.4.3
+pytest-asyncio==0.21.1
+httpx==0.25.2
+
+# Linting and formatting
+black==23.11.0
+isort==5.12.0
+flake8==6.1.0
+
+# Type checking
+mypy==1.7.1
+
+# Documentation
+mkdocs==1.5.3
+mkdocs-material==9.4.8
+
+# Production server
+gunicorn==21.2.0
+
+# Error tracking (optional)
+sentry-sdk[fastapi]==1.38.0
