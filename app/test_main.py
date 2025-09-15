@@ -48,21 +48,37 @@ def load_stock_data():
     """Load stock data from CSV file (same as Streamlit version)"""
     try:
         import os
-        csv_path = CSV_FILE_PATH
-        if not os.path.exists(csv_path):
-            # Try relative path from app directory
-            csv_path = os.path.join("..", CSV_FILE_PATH)
+
+        # Try multiple possible paths for CSV file
+        possible_paths = [
+            CSV_FILE_PATH,                    # Current directory
+            os.path.join("..", CSV_FILE_PATH), # Parent directory
+            os.path.join("app", "..", CSV_FILE_PATH), # From app directory
+            os.path.join("/opt/render/project/src", CSV_FILE_PATH), # Render path
+            os.path.join("/app", CSV_FILE_PATH), # Docker path
+        ]
+
+        csv_path = None
+        for path in possible_paths:
+            if os.path.exists(path):
+                csv_path = path
+                break
+
+        if csv_path is None:
+            print(f"❌ CSV file not found in any of these paths: {possible_paths}")
+            raise FileNotFoundError("CSV file not found")
 
         df = pd.read_csv(csv_path)
         print(f"✅ Loaded {len(df)} stocks from CSV: {csv_path}")
         return df
     except Exception as e:
         print(f"❌ Error loading CSV: {e}")
-        # Fallback to minimal dataset
+        # Fallback to minimal dataset with same structure as CSV
         fallback_data = [
             {"Overall_Rank": 1, "Ticker": "HDFCLIFE", "Sector": "Financials", "Current_Price": 788.75, "PE_Ratio": 14.5, "PB_Ratio": 4.2, "Avg_Historical_CAGR": 69.74, "Forecast_12M": 53.41, "Forecast_24M": 63.12, "Forecast_36M": 71.18, "Forecast_48M": 77.67, "Forecast_60M": 83.33},
             {"Overall_Rank": 2, "Ticker": "APOLLOHOSP", "Sector": "Healthcare", "Current_Price": 7922.5, "PE_Ratio": 58, "PB_Ratio": 6.2, "Avg_Historical_CAGR": 54.73, "Forecast_12M": 51.82, "Forecast_24M": 53.93, "Forecast_36M": 55.12, "Forecast_48M": 56.06, "Forecast_60M": 56.7}
         ]
+        print(f"🔄 Using fallback dataset with {len(fallback_data)} stocks")
         return pd.DataFrame(fallback_data)
 
 STOCK_DATA = None
