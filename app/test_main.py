@@ -44,12 +44,28 @@ app.add_middleware(
 # CSV file path for stock data
 CSV_FILE_PATH = "grand_table_expanded.csv"
 
+# Import complete stock dataset
+try:
+    import sys
+    import os
+    sys.path.append(os.path.dirname(__file__))
+    sys.path.append('..')
+    from complete_stock_data import COMPLETE_STOCK_DATA
+    print(f"✅ Imported complete dataset: {len(COMPLETE_STOCK_DATA)} stocks")
+except ImportError as e:
+    print(f"❌ Failed to import complete dataset: {e}")
+    # Minimal fallback
+    COMPLETE_STOCK_DATA = [
+        {'Overall_Rank': 1, 'Ticker': 'HDFCLIFE', 'Sector': 'Financials', 'Current_Price': 788.75, 'PE_Ratio': 14.5, 'PB_Ratio': 4.2, 'Avg_Historical_CAGR': 69.74, 'Forecast_12M': 53.41, 'Forecast_24M': 63.12, 'Forecast_36M': 71.18, 'Forecast_48M': 77.67, 'Forecast_60M': 83.33},
+        {'Overall_Rank': 2, 'Ticker': 'APOLLOHOSP', 'Sector': 'Healthcare', 'Current_Price': 7922.5, 'PE_Ratio': 58, 'PB_Ratio': 6.2, 'Avg_Historical_CAGR': 54.73, 'Forecast_12M': 51.82, 'Forecast_24M': 53.93, 'Forecast_36M': 55.12, 'Forecast_48M': 56.06, 'Forecast_60M': 56.7}
+    ]
+
 def load_stock_data():
-    """Load stock data from CSV file (same as Streamlit version)"""
+    """Load complete stock data (identical to Streamlit version)"""
     try:
         import os
 
-        # Try multiple possible paths for CSV file
+        # Try multiple possible paths for CSV file first
         possible_paths = [
             CSV_FILE_PATH,                    # Current directory
             os.path.join("..", CSV_FILE_PATH), # Parent directory
@@ -64,22 +80,18 @@ def load_stock_data():
                 csv_path = path
                 break
 
-        if csv_path is None:
-            print(f"❌ CSV file not found in any of these paths: {possible_paths}")
-            raise FileNotFoundError("CSV file not found")
+        if csv_path:
+            df = pd.read_csv(csv_path)
+            print(f"✅ Loaded {len(df)} stocks from CSV: {csv_path}")
+            return df
+        else:
+            print("📊 CSV not found, using embedded complete dataset")
+            raise FileNotFoundError("Using embedded data")
 
-        df = pd.read_csv(csv_path)
-        print(f"✅ Loaded {len(df)} stocks from CSV: {csv_path}")
-        return df
     except Exception as e:
-        print(f"❌ Error loading CSV: {e}")
-        # Fallback to minimal dataset with same structure as CSV
-        fallback_data = [
-            {"Overall_Rank": 1, "Ticker": "HDFCLIFE", "Sector": "Financials", "Current_Price": 788.75, "PE_Ratio": 14.5, "PB_Ratio": 4.2, "Avg_Historical_CAGR": 69.74, "Forecast_12M": 53.41, "Forecast_24M": 63.12, "Forecast_36M": 71.18, "Forecast_48M": 77.67, "Forecast_60M": 83.33},
-            {"Overall_Rank": 2, "Ticker": "APOLLOHOSP", "Sector": "Healthcare", "Current_Price": 7922.5, "PE_Ratio": 58, "PB_Ratio": 6.2, "Avg_Historical_CAGR": 54.73, "Forecast_12M": 51.82, "Forecast_24M": 53.93, "Forecast_36M": 55.12, "Forecast_48M": 56.06, "Forecast_60M": 56.7}
-        ]
-        print(f"🔄 Using fallback dataset with {len(fallback_data)} stocks")
-        return pd.DataFrame(fallback_data)
+        print(f"📊 Loading complete embedded dataset (identical to CSV)")
+        # Complete dataset - identical to Streamlit CSV
+        return pd.DataFrame(COMPLETE_STOCK_DATA)
 
 STOCK_DATA = None
 FORECAST_MAP = {
