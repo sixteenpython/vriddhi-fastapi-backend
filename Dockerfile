@@ -26,9 +26,9 @@ RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Copy requirements and install Python dependencies
-COPY requirements.txt /tmp/
+COPY requirements-minimal.txt /tmp/
 RUN pip install --upgrade pip setuptools wheel && \
-    pip install -r /tmp/requirements.txt
+    pip install -r /tmp/requirements-minimal.txt
 
 # Production stage
 FROM python:3.11-slim
