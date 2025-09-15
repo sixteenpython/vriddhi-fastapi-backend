@@ -3,7 +3,7 @@ builder = "DOCKERFILE"
 dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "python -m uvicorn app.simple_main:app --host 0.0.0.0 --port $PORT --workers 1"
+startCommand = "uvicorn app.simple_main:app --host 0.0.0.0 --port $PORT"
 # Disable health checks temporarily to bypass deployment issues
 # healthcheckPath = "/health"
 # healthcheckTimeout = 100
