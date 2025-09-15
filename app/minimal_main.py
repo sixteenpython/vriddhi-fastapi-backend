@@ -3,8 +3,24 @@ Ultra-minimal FastAPI app for debugging Railway deployment
 """
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Minimal Test")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://vriddhi-investment-app-z8au.vercel.app",
+        "https://*.vercel.app",
+        "http://localhost:3000",
+        "http://localhost:8000",
+        "*"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def root():
