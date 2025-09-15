@@ -76,6 +76,55 @@ async def test_endpoint():
         "environment": os.getenv("ENVIRONMENT", "production")
     }
 
+# Investment planning endpoint
+@app.post("/api/v1/investment/plan")
+async def investment_plan(request: dict):
+    """
+    Simple investment planning endpoint
+    """
+    monthly_investment = request.get("monthly_investment", 50000)
+    investment_horizon_months = request.get("investment_horizon_months", 12)
+
+    # Simple mock portfolio for demonstration
+    mock_portfolio = [
+        {"ticker": "RELIANCE", "allocation": 0.20, "sector": "Energy", "amount": monthly_investment * 0.20},
+        {"ticker": "TCS", "allocation": 0.15, "sector": "IT", "amount": monthly_investment * 0.15},
+        {"ticker": "HDFC", "allocation": 0.15, "sector": "Banking", "amount": monthly_investment * 0.15},
+        {"ticker": "INFY", "allocation": 0.10, "sector": "IT", "amount": monthly_investment * 0.10},
+        {"ticker": "ICICIBANK", "allocation": 0.10, "sector": "Banking", "amount": monthly_investment * 0.10},
+        {"ticker": "BHARTIARTL", "allocation": 0.10, "sector": "Telecom", "amount": monthly_investment * 0.10},
+        {"ticker": "ITC", "allocation": 0.10, "sector": "FMCG", "amount": monthly_investment * 0.10},
+        {"ticker": "HDFCBANK", "allocation": 0.10, "sector": "Banking", "amount": monthly_investment * 0.10}
+    ]
+
+    # Calculate projections
+    final_amount = monthly_investment * investment_horizon_months * 1.15  # 15% CAGR assumption
+    total_investment = monthly_investment * investment_horizon_months
+    gains = final_amount - total_investment
+
+    return {
+        "investment_summary": {
+            "monthly_investment": monthly_investment,
+            "investment_horizon_months": investment_horizon_months,
+            "total_investment": total_investment,
+            "final_amount": final_amount,
+            "total_gains": gains,
+            "cagr": 15.0
+        },
+        "portfolio_allocation": mock_portfolio,
+        "selection_rationale": {
+            "algorithm": "Balanced sector allocation with large-cap focus",
+            "sectors_selected": ["Energy", "IT", "Banking", "Telecom", "FMCG"],
+            "diversification_score": 85,
+            "risk_level": "Moderate"
+        },
+        "projections": {
+            "timeline": list(range(1, investment_horizon_months + 1)),
+            "portfolio_values": [monthly_investment * i * 1.15 for i in range(1, investment_horizon_months + 1)],
+            "invested_amounts": [monthly_investment * i for i in range(1, investment_horizon_months + 1)]
+        }
+    }
+
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8000))
