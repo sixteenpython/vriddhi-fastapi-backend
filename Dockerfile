@@ -26,9 +26,9 @@ RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Copy requirements and install Python dependencies
-COPY requirements-minimal.txt /tmp/
+COPY requirements-advanced.txt /tmp/
 RUN pip install --upgrade pip setuptools wheel && \
-    pip install -r /tmp/requirements-minimal.txt
+    pip install -r /tmp/requirements-advanced.txt
 
 # Production stage
 FROM python:3.11-slim
@@ -78,4 +78,4 @@ EXPOSE 8000
 #     CMD python -c "import requests; requests.get('http://localhost:8000/health')" || exit 1
 
 # Run the application
-CMD ["sh", "-c", "uvicorn app.minimal_main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD ["sh", "-c", "uvicorn app.advanced_main:app --host 0.0.0.0 --port ${PORT:-8000}"]
